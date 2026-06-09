@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+
+# python
+__pycache__/
+.env
+
+# build
+dist/
+build/
+
+# mac
+.DS_Store
