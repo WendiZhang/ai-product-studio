@@ -12,7 +12,7 @@ function Products() {
   });
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/generate-description`)
+    fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then((res) => res.json())
       .then((data) => {
           setProducts(data);
