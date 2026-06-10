@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -11,6 +11,7 @@ function App() {
   const [token, setToken] = useState(
     localStorage.getItem("token")
   );
+  const navigate = useNavigate();
 
   if (!token) {
     return (
@@ -24,7 +25,7 @@ function App() {
                 setToken(t);
               }}
               goToRegister={() =>
-                (window.location.href = "/register")
+                navigate("/register")
               }
             />
           }
@@ -35,10 +36,10 @@ function App() {
           element={
             <Register
               onRegisterSuccess={() =>
-                (window.location.href = "/login")
+                navigate("/login")
               }
               goToLogin={() =>
-                (window.location.href = "/login")
+                navigate("/login")
               }
             />
           }

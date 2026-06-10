@@ -312,7 +312,6 @@ export default function Dashboard({ token }) {
         {/* Empty state */}
         {history.length === 0 ? (
           <div className="text-center mt-24">
-            <div className="text-6xl mb-4">✨</div>
             <p className="text-gray-500 text-lg">
               No history yet
             </p>

@@ -103,11 +103,12 @@ export default function Register({ onRegisterSuccess,
         </form>
 
         {message && (
-          <p className='text-sm text-center text-gray-600 mt-4 ${
+          <p className={`text-sm text-center text-gray-600 mt-4 ${
               message.includes("success")
                 ? "text-green-600"
                 : "text-red-600"
-            }'>
+            }`}
+          >
             {message}
           </p>
         )}
