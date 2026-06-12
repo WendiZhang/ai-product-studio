@@ -5,11 +5,10 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from models import Product, GeneratedDescription, User
 from ai import generate_description as ai_generate_description
 
-
 def register_routes(app):
     @app.route("/")
     def home():
-        return "Backend is working 🚀"
+        return "Backend is working"
     
     @app.route("/health")
     def health():
@@ -33,10 +32,6 @@ def register_routes(app):
             "product_id": new_product.id
         })
 
-
-    # -----------------------
-    # GET PRODUCTS
-    # -----------------------
     @app.route("/products", methods=["GET"])
     def get_products():
         products = Product.query.all()
@@ -69,10 +64,6 @@ def register_routes(app):
             "description": data["description"]
         })
 
-
-    # -----------------------
-    # GENERATE AI DESCRIPTION
-    # -----------------------
     @app.route("/generate-description", methods=["POST"])
     @jwt_required()
     def generate_description():
