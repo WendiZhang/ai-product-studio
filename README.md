@@ -27,6 +27,14 @@ An AI-powered full-stack web application that generates product descriptions usi
 
 ![History Page](./screenshots/history.png)
 
+### Login Page
+
+![Login Page](./screenshots/login.png)
+
+### Register Page
+
+![Register Page](./screenshots/register.png)
+
 ## Features
 
 * User authentication with Register/Login and JWT
