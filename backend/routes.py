@@ -48,20 +48,38 @@ def register_routes(app):
     
     @app.route("/products/<int:id>", methods=["DELETE"])
     def delete_product(id):
+        product = Product.query.get(id)
+
+        if not product:
+            return jsonify({"error": "Product not found"}), 404
+
+        db.session.delete(product)
+        db.session.commit()
+
         return jsonify({
-            "message": "Deleted"
+            "message": "Product deleted"
         })
     
     @app.route("/products/<int:id>", methods=["PUT"])
     def update_product(id):
+        product = Product.query.get(id)
+
+        if not product:
+            return jsonify({"error": "Product not found"}), 404
 
         data = request.json
 
+        product.name = data["name"]
+        product.price = data["price"]
+        product.description = data.get("description", "")
+
+        db.session.commit()
+
         return jsonify({
-            "id": id,
-            "name": data["name"],
-            "price": data["price"],
-            "description": data["description"]
+            "id": product.id,
+            "name": product.name,
+            "price": product.price,
+            "description": product.description
         })
 
     @app.route("/generate-description", methods=["POST"])
