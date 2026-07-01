@@ -69,9 +69,18 @@ def register_routes(app):
 
         data = request.json
 
+        old_name = product.name
+
         product.name = data["name"]
         product.price = data["price"]
         product.description = data.get("description", "")
+
+        GeneratedDescription.query.filter_by(
+            product_name=old_name
+        ).update({
+            "product_name": product.name,
+            "features": product.description
+        })
 
         db.session.commit()
 
