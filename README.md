@@ -5,9 +5,9 @@ An AI-powered full-stack web application that generates product descriptions usi
 
 ## Live Demo
 
-* Frontend Demo: https://ai-product-studio-three.vercel.app/
+Frontend Demo: https://ai-product-studio-three.vercel.app/
 
-* Backend API: https://ai-product-studio-qn6v.onrender.com
+Backend API: https://ai-product-studio-qn6v.onrender.com
 
 ## Screenshots
 
@@ -37,34 +37,34 @@ An AI-powered full-stack web application that generates product descriptions usi
 
 ## Features
 
-* User authentication with Register/Login and JWT
-* AI-powered product description generator
-* Save generated content to database
-* Full CRUD operations for products
-* Generation history dashboard
-* Inline product editing with SaaS-style UI
-* Delete single history item or all history
-* Search history by product name
-* Responsive modern UI using Tailwind CSS
-* Protected API routes using JWT
+- User authentication with Register/Login and JWT
+- AI-powered product description generator
+- Save generated content to database
+- Full CRUD operations for products
+- Generation history dashboard
+- Inline product editing with SaaS-style UI
+- Delete single history item or all history
+- Search history by product name
+- Responsive modern UI using Tailwind CSS
+- Protected API routes using JWT
 
 ## Tech Stack
 
 ### Frontend
 
-* React
-* React Router
-* Tailwind CSS
-* Fetch / Axios
+- React
+- React Router
+- Tailwind CSS
+- Fetch / Axios
 
 ### Backend
 
-* Flask
-* Flask-JWT-Extended
-* Flask-SQLAlchemy
-* Flask-CORS
-* PostgreSQL / SQLite
-* OpenAI API
+- Flask
+- Flask-JWT-Extended
+- Flask-SQLAlchemy
+- Flask-CORS
+- PostgreSQL / SQLite
+- OpenAI API
 
 ## Project Structure
 
@@ -129,9 +129,9 @@ npm run dev
 
 ## Deployment
 
-* Frontend deployed on Vercel
-* Backend deployed on Render
-* Database hosted with Render PostgreSQL
+- Frontend deployed on Vercel
+- Backend deployed on Render
+- Database hosted with Render PostgreSQL
 
 
 
