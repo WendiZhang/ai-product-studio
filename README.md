@@ -1,11 +1,10 @@
-# AI-Product-Studio
 # AI Product Studio
 
 An AI-powered full-stack web application that generates product descriptions using AI and manages them in a product dashboard. Built with React, Flask, SQLAlchemy, PostgreSQL/SQLite, and JWT authentication.
 
 ## Live Demo
 
-Frontend Demo: https://ai-product-studio-three.vercel.app/
+Frontend Demo: https://ai-product-studio-three.vercel.app
 
 Backend API: https://ai-product-studio-qn6v.onrender.com
 
@@ -22,10 +21,6 @@ Backend API: https://ai-product-studio-qn6v.onrender.com
 ### Products Page
 
 ![Products Page](./screenshots/products.png)
-
-### History Page
-
-![History Page](./screenshots/history.png)
 
 ### Login Page
 
