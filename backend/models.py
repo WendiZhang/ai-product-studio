@@ -22,7 +22,6 @@ class Product(db.Model):
         db.Integer,
         db.ForeignKey("users.id"),
         nullable=True,
-        index=True,
     )
 
 

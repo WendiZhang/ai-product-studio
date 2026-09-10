@@ -13,20 +13,26 @@ load_dotenv()
 
 
 def ensure_product_ownership_column():
-    columns = {column["name"] for column in inspect(db.engine).get_columns("products")}
-    if "user_id" not in columns:
-        db.session.execute(
-            text(
-                "ALTER TABLE products ADD COLUMN user_id "
-                "INTEGER REFERENCES users(id)"
+    with db.engine.begin() as connection:
+        if db.engine.dialect.name == "postgresql":
+            connection.execute(
+                text(
+                    "ALTER TABLE products ADD COLUMN IF NOT EXISTS user_id "
+                    "INTEGER REFERENCES users(id)"
+                )
             )
-        )
-        db.session.commit()
+            return
 
-    db.session.execute(
-        text("CREATE INDEX IF NOT EXISTS ix_products_user_id ON products (user_id)")
-    )
-    db.session.commit()
+        columns = {
+            column["name"] for column in inspect(connection).get_columns("products")
+        }
+        if "user_id" not in columns:
+            connection.execute(
+                text(
+                    "ALTER TABLE products ADD COLUMN user_id "
+                    "INTEGER REFERENCES users(id)"
+                )
+            )
 
 
 def create_app():
