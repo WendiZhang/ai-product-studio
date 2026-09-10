@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Products() {
+function Products({ token }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -12,13 +12,15 @@ function Products() {
   });
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/products`)
+    fetch(`${import.meta.env.VITE_API_URL}/products`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((res) => res.json())
       .then((data) => {
           setProducts(data);
           setLoading(false);
       });
-  }, []);
+  }, [token]);
 
   const startEdit = (product) => {
     setEditingId(product.id);
@@ -45,6 +47,7 @@ function Products() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(editForm),
       }
@@ -66,6 +69,7 @@ function Products() {
 
     await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
       method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     setProducts(products.filter((p) => p.id !== id));
@@ -83,7 +87,6 @@ function Products() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 p-6">
       <div className="max-w-6xl mx-auto">
 
-        {/* Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
             Products
@@ -106,7 +109,6 @@ function Products() {
           />
         </div>
 
-        {/* Empty state */}
         {products.length === 0 ? (
           <div className="text-center mt-20 text-gray-500">
             No products found
@@ -126,7 +128,6 @@ function Products() {
                 className="bg-white border shadow-sm rounded-2xl p-5 hover:shadow-lg transition"
               >
                 {editingId === product.id ? (
-                  // ✏️ EDIT MODE
                   <div className="space-y-3">
 
                     <input
@@ -179,7 +180,6 @@ function Products() {
                     </div>
                   </div>
                 ) : (
-                  // 📦 VIEW MODE
                   <>
                     <h3 className="text-xl font-semibold">
                       {product.name}

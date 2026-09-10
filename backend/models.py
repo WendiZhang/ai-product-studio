@@ -18,6 +18,12 @@ class Product(db.Model):
     name = db.Column(db.String(120), nullable=False)
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=True,
+        index=True,
+    )
 
 
 class GeneratedDescription(db.Model):
@@ -25,7 +31,6 @@ class GeneratedDescription(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     product_name = db.Column(db.String(200))

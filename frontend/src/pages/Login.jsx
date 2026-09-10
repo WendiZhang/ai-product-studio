@@ -12,24 +12,21 @@ export default function Login({ onLogin, goToRegister }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     if (!email || !password) {
       setMessage("Please fill in all fields");
       return;
     }
 
+    setLoading(true);
     try {
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
         email,
         password,
       });
 
-      // save JWT token
-      localStorage.setItem("token", res.data.token);
       onLogin(res.data.token);
 
-      setMessage("Login successful ✅");
       navigate("/");
     } catch (err) {
       setMessage(
@@ -67,10 +64,6 @@ export default function Login({ onLogin, goToRegister }) {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
             />
-            <label className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-              <input type="checkbox" />
-              Remember me
-            </label>
             <button
               type="button"
               onClick={() =>
@@ -93,13 +86,7 @@ export default function Login({ onLogin, goToRegister }) {
         </form>
 
         {message && (
-          <p
-            className={`text-sm text-center mt-4 ${
-              message.includes("successful")
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
-          >
+          <p className="text-sm text-center mt-4 text-red-600">
             {message}
           </p>
         )}

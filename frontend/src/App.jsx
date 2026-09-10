@@ -8,10 +8,18 @@ import Products from "./pages/Products";
 import Generate from "./pages/Generate";
 
 function App() {
-  const [token, setToken] = useState(
-    localStorage.getItem("token")
-  );
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
   const navigate = useNavigate();
+
+  const handleLogin = (newToken) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+  };
 
   if (!token) {
     return (
@@ -19,15 +27,7 @@ function App() {
         <Route
           path="/login"
           element={
-            <Login
-              onLogin={(t) => {
-                localStorage.setItem("token", t);
-                setToken(t);
-              }}
-              goToRegister={() =>
-                navigate("/register")
-              }
-            />
+            <Login onLogin={handleLogin} goToRegister={() => navigate("/register")} />
           }
         />
 
@@ -35,12 +35,8 @@ function App() {
           path="/register"
           element={
             <Register
-              onRegisterSuccess={() =>
-                navigate("/login")
-              }
-              goToLogin={() =>
-                navigate("/login")
-              }
+              onRegisterSuccess={() => navigate("/login")}
+              goToLogin={() => navigate("/login")}
             />
           }
         />
@@ -55,18 +51,13 @@ function App() {
 
   return (
     <>
-      <Navbar
-        onLogout={() => {
-          localStorage.removeItem("token");
-          setToken(null);
-        }}
-      />
+      <Navbar onLogout={handleLogout} />
 
       <Routes>
         <Route path="/" element={<Dashboard token={token} />} />
-        <Route path="/dashboard" element={<Dashboard token={token} />} />
         <Route path="/products" element={<Products token={token} />} />
         <Route path="/generate" element={<Generate token={token} />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

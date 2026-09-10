@@ -1,8 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function Register({ onRegisterSuccess,
-  goToLogin }) {
+export default function Register({ onRegisterSuccess, goToLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -11,25 +10,20 @@ export default function Register({ onRegisterSuccess,
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     if (!email || !password) {
       setMessage("Please fill in all fields");
       return;
     }
 
+    setLoading(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/register`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/register`, {
         email,
         password,
       });
 
-      setMessage("Account created successfully ✅");
-
-      // optional: auto switch to login or auto-login
-      if (onRegisterSuccess) {
-        onRegisterSuccess();
-      }
+      onRegisterSuccess?.();
 
     } catch (err) {
       setMessage(
@@ -103,12 +97,7 @@ export default function Register({ onRegisterSuccess,
         </form>
 
         {message && (
-          <p className={`text-sm text-center text-gray-600 mt-4 ${
-              message.includes("success")
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
-          >
+          <p className="text-sm text-center mt-4 text-red-600">
             {message}
           </p>
         )}

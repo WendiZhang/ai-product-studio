@@ -1,12 +1,33 @@
 import os
+from datetime import timedelta
+
 from flask import Flask
 from flask_cors import CORS
-from db import db
 from flask_jwt_extended import JWTManager
-from datetime import timedelta
 from dotenv import load_dotenv
+from sqlalchemy import inspect, text
+
+from db import db
 
 load_dotenv()
+
+
+def ensure_product_ownership_column():
+    columns = {column["name"] for column in inspect(db.engine).get_columns("products")}
+    if "user_id" not in columns:
+        db.session.execute(
+            text(
+                "ALTER TABLE products ADD COLUMN user_id "
+                "INTEGER REFERENCES users(id)"
+            )
+        )
+        db.session.commit()
+
+    db.session.execute(
+        text("CREATE INDEX IF NOT EXISTS ix_products_user_id ON products (user_id)")
+    )
+    db.session.commit()
+
 
 def create_app():
     app = Flask(__name__)
@@ -33,6 +54,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        ensure_product_ownership_column()
 
     return app
 

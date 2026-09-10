@@ -45,7 +45,6 @@ export default function Generate({ token }) {
     alert("Copied!");
   };
 
-  // Save to Products
   const saveToProducts = async () => {
     try {
       setSaving(true);
@@ -54,6 +53,7 @@ export default function Generate({ token }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: productName,
@@ -122,6 +122,8 @@ export default function Generate({ token }) {
               setProductName("");
               setFeatures("");
               setResult("");
+              setPrice("");
+              setSaveMessage("");
             }}
             className="w-full mt-2 border border-gray-300 py-3 rounded-xl"
           >

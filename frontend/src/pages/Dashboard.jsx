@@ -13,6 +13,25 @@ export default function Dashboard({ token }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const loadHistory = async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/history`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Unable to load history");
+
+      const data = await res.json();
+      setHistory(Array.isArray(data) ? data : []);
+    };
+
+    const loadStats = async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Unable to load stats");
+
+      setStats(await res.json());
+    };
+
     async function loadDashboard() {
       try {
         await Promise.all([
@@ -27,66 +46,13 @@ export default function Dashboard({ token }) {
     }
 
     loadDashboard();
-  }, []);
+  }, [token]);
 
   const filteredHistory = history.filter((item) =>
     item.product_name
       ?.toLowerCase()
       .includes(search.toLowerCase())
   );
-
-  const loadHistory = async () => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/history`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await res.json();
-
-      console.log("History response:", data);
-
-      if (Array.isArray(data)) {
-        setHistory(data);
-      } else {
-        console.error("Expected array:", data);
-        setHistory([]);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const loadStats = async () => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/stats`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await res.json();
-
-      console.log("Stats:", data);
-
-      if (!res.ok) {
-        console.error("Stats error:", data);
-        return;
-      }
-
-      setStats(data);
-
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const deleteAllHistory = async () => {
     if (!window.confirm("Delete all history?")) {
@@ -122,7 +88,6 @@ export default function Dashboard({ token }) {
 
       <div className="max-w-6xl mx-auto">
 
-        {/* Header */}
         <div className="mb-10">
            <h1 className="text-5xl font-bold text-gray-900 mb-2">
               Dashboard
@@ -141,22 +106,13 @@ export default function Dashboard({ token }) {
           />
 
           <button
-            onClick={() => {
-              if (
-                window.confirm(
-                  "Delete all generation history?"
-                )
-              ) {
-                deleteAllHistory();
-              }
-            }}
+            onClick={deleteAllHistory}
             className="bg-red-500 hover:bg-red-600 text-white px-5 py-3 rounded-xl font-medium transition mt-5"
           >
             Delete All
           </button>
         </div>
 
-        {/* Dashboard Stats */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
 
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-lg transition-all p-6">
@@ -193,7 +149,6 @@ export default function Dashboard({ token }) {
 
         <div className="grid lg:grid-cols-2 gap-6 mb-10">
 
-          {/* Recent Activity Card */}
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
 
              <div className="flex items-center justify-between mb-4">
@@ -233,7 +188,6 @@ export default function Dashboard({ token }) {
             )}
           </div>
 
-          {/* Usage Summary Card */}
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 mb-10">
             <h3 className="text-xl font-semibold mb-4">
               Usage Summary
@@ -309,7 +263,6 @@ export default function Dashboard({ token }) {
 
         </div>
 
-        {/* Empty state */}
         {history.length === 0 ? (
           <div className="text-center mt-24">
             <p className="text-gray-500 text-lg">
@@ -336,7 +289,6 @@ export default function Dashboard({ token }) {
                 className="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6"
               >
 
-                {/* Header Row */}
                 <div className="flex items-start justify-between mb-3">
 
                   <div>
@@ -355,7 +307,6 @@ export default function Dashboard({ token }) {
 
                 </div>
 
-                {/* Features */}
                 <div className="mb-4">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                     Features
@@ -365,7 +316,6 @@ export default function Dashboard({ token }) {
                   </p>
                 </div>
 
-                {/* Description */}
                 <div className="mb-5">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                     AI Description
@@ -375,7 +325,6 @@ export default function Dashboard({ token }) {
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center justify-between">
 
                   <div className="flex gap-2">

@@ -3,7 +3,11 @@ node_modules/
 
 # python
 __pycache__/
+venv/
+.venv/
+*.py[cod]
 .env
+*.db
 
 # build
 dist/

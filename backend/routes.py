@@ -15,13 +15,16 @@ def register_routes(app):
         return {"status": "ok"}
 
     @app.route("/products", methods=["POST"])
+    @jwt_required()
     def create_product():
+        user_id = int(get_jwt_identity())
         data = request.json
 
         new_product = Product(
             name=data["name"],
             price=data["price"],
-            description=data.get("description", "")
+            description=data.get("description", ""),
+            user_id=user_id,
         )
 
         db.session.add(new_product)
@@ -33,8 +36,10 @@ def register_routes(app):
         })
 
     @app.route("/products", methods=["GET"])
+    @jwt_required()
     def get_products():
-        products = Product.query.all()
+        user_id = int(get_jwt_identity())
+        products = Product.query.filter_by(user_id=user_id).all()
 
         return jsonify([
             {
@@ -47,8 +52,10 @@ def register_routes(app):
         ])
     
     @app.route("/products/<int:id>", methods=["DELETE"])
+    @jwt_required()
     def delete_product(id):
-        product = Product.query.get(id)
+        user_id = int(get_jwt_identity())
+        product = Product.query.filter_by(id=id, user_id=user_id).first()
 
         if not product:
             return jsonify({"error": "Product not found"}), 404
@@ -61,8 +68,10 @@ def register_routes(app):
         })
     
     @app.route("/products/<int:id>", methods=["PUT"])
+    @jwt_required()
     def update_product(id):
-        product = Product.query.get(id)
+        user_id = int(get_jwt_identity())
+        product = Product.query.filter_by(id=id, user_id=user_id).first()
 
         if not product:
             return jsonify({"error": "Product not found"}), 404
@@ -76,7 +85,8 @@ def register_routes(app):
         product.description = data.get("description", "")
 
         GeneratedDescription.query.filter_by(
-            product_name=old_name
+            product_name=old_name,
+            user_id=user_id,
         ).update({
             "product_name": product.name,
             "features": product.description
