@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
-function Products({ token }) {
+function Products({ token, onUnauthorized }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({
@@ -12,15 +13,36 @@ function Products({ token }) {
   });
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/products`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-          setProducts(data);
-          setLoading(false);
-      });
-  }, [token]);
+    const loadProducts = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status === 401 || response.status === 422) {
+          onUnauthorized();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Unable to load products");
+        }
+
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid products response");
+        }
+
+        setProducts(data);
+      } catch (requestError) {
+        setError(requestError.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, [token, onUnauthorized]);
 
   const startEdit = (product) => {
     setEditingId(product.id);
@@ -55,6 +77,11 @@ function Products({ token }) {
 
     const data = await response.json();
 
+    if (!response.ok) {
+      setError(data.error || "Unable to update product");
+      return;
+    }
+
     setProducts(
       products.map((p) =>
         p.id === id ? data : p
@@ -67,10 +94,15 @@ function Products({ token }) {
   const deleteProduct = async (id) => {
     if (!window.confirm("Delete this product?")) return;
 
-    await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    if (!response.ok) {
+      setError("Unable to delete product");
+      return;
+    }
 
     setProducts(products.filter((p) => p.id !== id));
   };
@@ -98,6 +130,12 @@ function Products({ token }) {
             Manage your product catalog
           </p>
         </div>
+
+        {error && (
+          <p className="mb-6 rounded-lg bg-red-50 px-4 py-3 text-red-700">
+            {error}. Please try again.
+          </p>
+        )}
 
         <div className="mb-6">
           <input

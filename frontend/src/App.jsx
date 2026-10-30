@@ -55,7 +55,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Dashboard token={token} />} />
-        <Route path="/products" element={<Products token={token} />} />
+        <Route
+          path="/products"
+          element={<Products token={token} onUnauthorized={handleLogout} />}
+        />
         <Route path="/generate" element={<Generate token={token} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
